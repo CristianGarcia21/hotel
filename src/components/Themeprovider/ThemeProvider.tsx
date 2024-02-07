@@ -11,7 +11,10 @@ import ThemeContext from "@/context/themeContext";
  * @returns El componente ThemeProvider.
  */
 const ThemeProvider = ({ children} : { children: React.ReactNode }) => {
-    const themeFromLocalStorage : boolean = typeof localStorage !== undefined && localStorage.getItem("hotel-theme") ? JSON.parse(localStorage.getItem("hotel-theme")  ! ) : false;
+    const themeFromLocalStorage : boolean = 
+    typeof localStorage !== 'undefined' && localStorage.getItem("hotel-theme")
+    ? JSON.parse(localStorage.getItem("hotel-theme")!) 
+    : false;
 
     const [ darkTheme, setDarkTheme ] = useState<boolean>(themeFromLocalStorage);
     const [renderComponent, setRenderComponent] = useState(false);
