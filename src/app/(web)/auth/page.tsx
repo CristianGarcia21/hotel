@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import {
   AiFillFacebook,
   AiFillGithub,
@@ -10,6 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import { signUp } from "next-auth-sanity/client";
 import { signIn, useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const defaultFormData = {
   email: "",
@@ -22,39 +23,58 @@ const Auth = () => {
   const inputStyles =
     "border border-gray-300 sm:text-sm text-black rounded-lg block w-full p-2.5 focus:outline-none";
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value })
-    };
+  /**
+   * Maneja el evento de cambio de un elemento de entrada.
+   * Actualiza el estado de los datos del formulario con el nuevo valor de entrada.
+   *
+   * @param event - El objeto de evento de cambio.
+   */
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const { data: session } = useSession();
+  const { data: session } = useSession();
+  const router = useRouter();
 
-    console.log(session);
-    
-    const loginHandler = async () => {
-      try {
-        await signIn();
-        //push the user to the home
-      } catch (error) {
-        console.log(error);
-        toast.error("Something went wrong. Please try again.")
-      }
+  useEffect(() => {
+    if (session) router.push("/");
+  }, [router, session]);
+
+  /**
+   * Maneja el proceso de inicio de sesión.
+   *
+   * @returns {Promise<void>} Una promesa que se resuelve cuando el proceso de inicio de sesión está completo.
+   */
+  const loginHandler = async () => {
+    try {
+      await signIn();
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again.");
     }
+  };
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        try {
-            const user = await signUp(formData);
-            if(user) {
-              toast.success("Success. Please sign in to continue.");
-            }
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong. Please try again.")
-        } finally {
-            setFormData(defaultFormData);
-        }
-    };
+  /**
+   * Maneja el evento de envío del formulario.
+   *
+   * @param event - El evento de envío del formulario.
+   */
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const user = await signUp(formData);
+      if (user) {
+        toast.success("Success. Please sign in to continue.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setFormData(defaultFormData);
+    }
+  };
 
   return (
     <section className="container mx-auto">
@@ -65,9 +85,15 @@ const Auth = () => {
           </h1>
           <p>Or</p>
           <span className=" inline-flex items-center">
-            <AiFillGithub onClick={loginHandler} className=" mr-3 text-4xl cursor-pointer text-black dark:text-white" />
+            <AiFillGithub
+              onClick={loginHandler}
+              className=" mr-3 text-4xl cursor-pointer text-black dark:text-white"
+            />
             |
-            <FcGoogle onClick={loginHandler} className=" ml-3 text-4xl cursor-pointer " />
+            <FcGoogle
+              onClick={loginHandler}
+              className=" ml-3 text-4xl cursor-pointer "
+            />
           </span>
         </div>
 
@@ -107,7 +133,9 @@ const Auth = () => {
             Sign Up
           </button>
         </form>
-        <button onClick={loginHandler} className=" text-blue-700 underline">Login</button>
+        <button onClick={loginHandler} className=" text-blue-700 underline">
+          Login
+        </button>
       </div>
     </section>
   );
