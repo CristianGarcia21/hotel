@@ -19,15 +19,15 @@ const ClientComponent: FC<Props> = (props) => {
         <div className="flex justify-between mt-12">
           <div className="flex gap-3 flex-col items-center justify-center">
             <p className=" text-xs lg:text-xl text-center">Basic Room</p>
-            <CountUpNumber endValue={200} duration={2000} />
+            <CountUpNumber endValue={50} duration={2000} />
           </div>
           <div className="flex gap-3 flex-col items-center justify-center">
             <p className=" text-xs lg:text-xl text-center">Luxury Room</p>
-            <CountUpNumber endValue={200} duration={2000} />
+            <CountUpNumber endValue={120} duration={2000} />
           </div>
           <div className="flex gap-3 flex-col items-center justify-center">
             <p className=" text-xs lg:text-xl text-center">Suite</p>
-            <CountUpNumber endValue={200} duration={2000} />
+            <CountUpNumber endValue={60} duration={2000} />
           </div>
         </div>
       </div>
